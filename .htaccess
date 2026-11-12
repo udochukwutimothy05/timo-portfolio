@@ -1,0 +1,44 @@
+# ---- Hide folder contents ----
+Options -Indexes
+
+# ---- Friendly error pages ----
+# LOCAL path. On live hosting change both lines to /404.php
+ErrorDocument 404 /portfolio/404.php
+ErrorDocument 403 /portfolio/404.php
+
+# ---- Block sensitive file types ----
+<FilesMatch "\.(sql|md|log|ini|bak|env|sh)$">
+    Require all denied
+</FilesMatch>
+
+# ---- Security headers ----
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# ---- Compression (faster pages) ----
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+# ---- Browser caching: enable ONLY on the live site (it would hide your edits while developing) ----
+# <IfModule mod_expires.c>
+#     ExpiresActive On
+#     ExpiresByType image/jpeg "access plus 1 month"
+#     ExpiresByType image/png  "access plus 1 month"
+#     ExpiresByType image/webp "access plus 1 month"
+#     ExpiresByType text/css   "access plus 1 week"
+#     ExpiresByType application/javascript "access plus 1 week"
+# </IfModule>
+
+RewriteEngine On
+
+# ---- Force HTTPS: uncomment on the live site AFTER the SSL certificate is active ----
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ---- /sitemap.xml serves the generated sitemap ----
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
